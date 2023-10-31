@@ -1,0 +1,180 @@
+{%  extends 'base.html' %}
+{%  include 'header.html' %}
+
+{%  block title %}
+
+Home
+
+{%  endblock %}
+
+{%   block body %}
+
+<div class="container">
+	<div class="row">
+		<div class="col md-12">
+			<div class="jumbotron p-3">
+
+				<h2 class="text-center">Daftar <b>Panderita</b> 
+				</h2>
+					<form action="{{url_for('insert')}}" method="POST">
+
+						<div class="form-group">
+							<label for="name" class="form-label">Name:</label>
+							<input type="text" name="name" class="form-control" id="name" placeholder="Enter Full Name....."
+								required>
+						</div>
+
+						<div class="form-group">
+							<label for="email" class="form-label">Email:</label>
+							<input type="email" class="form-control" name="email" id="email" placeholder="Enter Email....."
+								required>
+						</div>
+
+						<div class="form-group">
+							<label for="phone" class="form-label">Phone:</label>
+							<input type="number" class="form-control" name="phone" id="phone" placeholder="Enter Phone"
+								required>
+						</div>
+
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary">Add Employee</button>
+						</div>
+
+					</form>
+
+				{%with messages = get_flashed_messages()%}
+				{%if messages%}
+				{% for message in messages %}
+
+				<div class="alert alert-success alert-dismissible fade show" role="alert">
+					<strong>{{message}}</strong>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+
+				{%endfor%}
+				{%endif%}
+				{%endwith%}
+
+				<table class="table table-hover table-dark table-hover">
+					<thead>
+
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+
+					<tbody>
+
+
+						{% for employee in employees%}
+						<tr>
+							<td>{{ employee.id }}</td>
+							<td>{{ employee.name }}</td>
+							<td>{{ employee.email }}</td>
+							<td>{{ employee.phone }}</td>
+							<td>
+								<a href="/update/{{employee.id}}" class="btn btn-warning btn-xs" data-toggle="modal"
+									data-target="#modaledit{{employee.id}}" title="Edit"><i class="bi bi-pencil-square"></i>Edit</a>
+
+								<!-- onclick="return confirm('Are You Sure To Delete ?')" -->
+								<!-- <a href="/delete/{{ employee.id }}" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#modaldelete">Delete</a> -->
+								<a href="/delete/{{employee.id}}" class="btn btn-danger" data-bs-toggle="modal"
+									data-bs-target="#modaldelete{{employee.id}}" title="Delete"><i class="bi bi-trash"></i>Delete</a>
+							</td>
+						</tr>
+
+
+
+						<!-- EndModal Add Employee-->
+
+
+						<!-- Modal Edit Employee		 -->
+						<div id="modaledit{{employee.id}}" class="modal fade" tabindex="-1" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h4 class="modal-title text-primary" >Update Employee</h4>
+										<button type="button" class="close" data-dismiss="modal" aria-label="close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+
+									<div class="modal-body">
+
+										<form action="{{url_for('update')}}" method="POST">
+
+											<input type="hidden" name="id" value="{{employee.id}}">
+
+											<div class="form-group">
+												<label for="name" class="form-label">Name:</label>
+												<input type="text" name="name" class="form-control" value="{{ employee.name }}"
+													placeholder="Enter Full Name....." required>
+											</div>
+
+											<div class="form-group">
+												<label for="email" class="form-label">Email:</label>
+												<input type="email" class="form-control" name="email" value="{{ employee.email }}"
+													placeholder="Enter Email....." required>
+											</div>
+
+											<div class="form-group">
+												<label for="phone" class="form-label">Phone:</label>
+												<input type="number" class="form-control" name="phone" value="{{ employee.phone }}"
+													placeholder="Enter Phone" required>
+											</div>
+
+											<div class="form-group">
+												<button type="submit" class="btn btn-primary">Update Employee</button>
+
+											</div>
+										</form>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- EndModal EditEmployee-->
+						</div>
+
+						<!-- modal Delete  -->
+						<div class="modal fade" id="modaldelete{{employee.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h2 class="modal-title  text-danger fs-5" id="exampleModalLabel">Delete Confirmation..</h2>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<p>Are you sure want to Delete <strong style="color:red;">"{{employee.name}}"?</strong></p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+										<a href="/delete/{{ employee.id }}" class="btn btn-danger">Confirmar</a>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- Eendmodal Delete  -->
+
+						{%endfor%}
+
+					</tbody>
+
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+{%  endblock %}
